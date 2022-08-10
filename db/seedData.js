@@ -1,5 +1,5 @@
 const  client  = require('./client');
-const {createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory} = require('./index');
+const {createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory,createContactInfo, updateContact} = require('./index');
   
 
   async function dropTables() {
@@ -48,7 +48,7 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
       user_id INTEGER REFERENCES users(id),
       first_name VARCHAR(255) NOT NULL,
       last_name VARCHAR(255) NOT NULL,
-      phone INT,
+      phone BIGINT,
       street TEXT NOT NULL,
       street_num INT,
       apt VARCHAR(255) NOT NULL,
@@ -97,7 +97,7 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
     console.log("Starting to create users...")
     try {
       const usersToCreate = [
-        { email: "albert", password: "bertie99", isAdmin: true },
+        { email: "albert", password: "bertie99", isAdmin: true},
         { email: "sandra", password: "sandra123",isAdmin: false },
         { email: "glamgal", password: "glamgal123",isAdmin: false },
       ]
@@ -136,6 +136,57 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
   }
 
 
+  async function createInitialContact() {
+    console.log("Starting to create contact");
+    
+    try {
+      const contactToCreate = [
+        {first_name: "Albert",last_name:"Gilbert",phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
+        {first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
+        {first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Miami",zip:34567},
+        
+        ]
+
+      const contacts = await Promise.all(contactToCreate.map(createContactInfo))
+
+      console.log("Contact created:")
+      console.log(contacts)
+      console.log("Finished creating contact!")
+    }
+    catch (error) {
+      console.error("Error creating contact!");
+      throw error;
+    }
+
+  }
+
+
+  async function updateInitialContact() {
+    console.log("Starting to update contact");
+    
+    try {
+      const contactToUpdate = [
+        {id:1, first_name: "Albert",last_name:"Gilbert",phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Chicago",zip:306783},
+        {id:3, first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Seattle",zip:40786},
+        {id:2, first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Minneapolis",zip:34567},
+        ]
+
+       const updatedContacts = await Promise.all(contactToUpdate.map(updateContact))
+
+      console.log("Contact created:")
+      console.log( updatedContacts )
+      console.log("Finished creating contact!")
+    }
+    catch (error) {
+      console.error("Error creating contact!");
+      throw error;
+    }
+
+  }
+
+
+
+
 
   async function rebuildDB() {
     try {
@@ -150,6 +201,8 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
       // const name = "banana";
       // const description = "one banana"
       // console.log(await updateProduct({id: 3, name, description}))
+      createInitialContact();
+      updateInitialContact();
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error
