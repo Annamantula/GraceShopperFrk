@@ -1,5 +1,5 @@
 const  client  = require('./client');
-const {createUser} = require('./users');
+const {createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory} = require('./index');
   
 
   async function dropTables() {
@@ -37,7 +37,8 @@ const {createUser} = require('./users');
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) UNIQUE NOT NULL,
       description TEXT NOT NULL,
-      price TEXT NOT NULL,
+      price FLOAT NOT NULL,
+      price_type TEXT NOT NULL,
       category TEXT NOT NULL,
       inventory FLOAT,
       img_url VARCHAR(255)
@@ -111,6 +112,29 @@ const {createUser} = require('./users');
     }
   }
 
+  async function createInitialProducts() {
+    console.log("Starting to create products");
+    
+    try {
+      const productsToCreate = [
+        {name: "apple", description: "red apple", price: 1.50, price_type: "unit", category: "fruit", inventory: 5, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" },
+        {name: "corn", description: "corn", price: 1.23, price_type: "dollar", category: "vegetable", inventory: 9, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" },
+        {name: "bread", description: "whole grain bread", price: 2.85, price_type: "$", category: "grocery", inventory: 120, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" },
+        {name: "beef steak", description: "New York Strip steak", price: 9.50, price_type: "/pound", category: "meat", inventory: 85.5, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" }
+      ]
+
+      const products = await Promise.all(productsToCreate.map(createProduct))
+
+      console.log("Products created:")
+      console.log(products)
+      console.log("Finished creating products!")
+    }
+    catch (error) {
+      console.error("Error creating products!");
+      throw error;
+    }
+  }
+
 
 
   async function rebuildDB() {
@@ -118,6 +142,14 @@ const {createUser} = require('./users');
       await dropTables()
       await createTables()
       await createInitialUsers()
+      await createInitialProducts();
+      console.log("getAllProducts", await getAllProducts());
+      console.log("getProductById", await getProductById(3));
+      console.log("getProductByName", await getProductByName("apple"));
+      console.log("getProductByCategory", await getProductByCategory("fruit"));
+      // const name = "banana";
+      // const description = "one banana"
+      // console.log(await updateProduct({id: 3, name, description}))
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error
