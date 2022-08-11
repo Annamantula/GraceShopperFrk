@@ -1,13 +1,5 @@
 const  client  = require('./client');
-const {
-  createCart,
-  createOrderProduct, 
-  createOrder,
-  createCartProducts, 
-  createUser, 
-  createProduct,
-  createContactInfo
-} = require('./index');
+const {createCart, createOrderProduct, createOrder, createCartProducts, createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory,createContactInfo, updateContact, attachCartProductsToCart, getCartByUserId, getOrderByCustomerId, attachOrderProductsToOrder} = require('./index');
   
 
   async function dropTables() {
@@ -170,6 +162,30 @@ const {
 
   }
 
+
+  async function updateInitialContact() {
+    console.log("Starting to update contact");
+    
+    try {
+      const contactToUpdate = [
+        
+        {id:2, first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Seattle",zip:40786},
+        {id:3, first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Minneapolis",zip:34567}
+      ]
+
+       const updatedContacts = await Promise.all(contactToUpdate.map(updateContact))
+
+      console.log("Contact created:")
+      console.log( updatedContacts )
+      console.log("Finished creating contact!")
+    }
+    catch (error) {
+      console.error("Error creating contact!");
+      throw error;
+    }
+
+  }
+
   async function createInCart() {
     console.log("Starting to create cart");
     
@@ -252,26 +268,37 @@ const {
   }
 
 
-  async function rebuildDB() {
+  async function testDB() {
     try {
       await dropTables()
       await createTables()
       await createInitialUsers()
       await createInitialProducts();
+      // console.log("getAllProducts", await getAllProducts());
+      // console.log("getProductById", await getProductById(3));
+      // console.log("getProductByName", await getProductByName("apple"));
+      // console.log("getProductByCategory", await getProductByCategory("fruit"));
+      // const name = "banana";
+      // const description = "one banana"
+      // console.log("UpdateProduct",await updateProduct({id: 3, name, description}))
       await createInitialContact();
+      console.log("UpdateContactsConsole")
+      await updateInitialContact();
       await createInCart();
       await createInCartProduct();
       await createInOrder();
       await createInOrderProducts();
+      const cartTest = await getCartByUserId(2);
+      console.log(await attachCartProductsToCart(cartTest));
+      const orderTest = await getOrderByCustomerId(1);
+      console.log(orderTest);
+      console.log(await attachOrderProductsToOrder(orderTest));
       
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error
     }
   }
+
+  testDB();
   
-  module.exports = {
-    rebuildDB,
-    dropTables,
-    createTables,
-  }

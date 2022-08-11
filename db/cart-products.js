@@ -1,15 +1,15 @@
 const client = require('./client');
 
-async function createCartProducts(cart_id, product_id, count) {
+async function createCartProducts({cart_id, product_id, count}) {
     try {
-       const { rows } = client.query(
+       const { rows } = await client.query(
         `
-        INSERT INTO cart_products
+        INSERT INTO cart_products(cart_id, product_id, count)
         VALUES ($1, $2, $3)
         RETURNING *;
         `, [cart_id, product_id, count]
        )
-    return rows[0];
+    return rows;
 
    } catch (error) {
     console.error("error")
@@ -19,7 +19,7 @@ async function createCartProducts(cart_id, product_id, count) {
 
 async function deleteCartProducts(cart_products_id) {
     try {
-       const { rows } = client.query(
+       const { rows } = await client.query(
         `
         DELETE FROM cart_products
         WHERE id=$1
