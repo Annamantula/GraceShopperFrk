@@ -1,4 +1,5 @@
 const client = require("./client");
+
 async function createOrderProduct({cart_products_id, order_id, product_id, count, purchase_price}) {
     try {
       const {
@@ -13,7 +14,7 @@ async function createOrderProduct({cart_products_id, order_id, product_id, count
       );
       return order;
     } catch (error) {
-      console.error("CreateUsers errors");
+      console.error("CreateOrderProduct errors");
       throw error;
     }
   }
@@ -35,13 +36,28 @@ async function createOrderProduct({cart_products_id, order_id, product_id, count
       );
       return rows[0];
      } catch (error) {
-        console.error("There is an error in updateContacts");
+        console.error("There is an error in updateOrderProduct");
          throw error;
    }
   }
 
+  async function getOrderProductsByOrderId(order_id) {
+    try{
+     const {rows:[order_products] } = await client.query(`
+     SELECT *
+     FROM order_products
+     WHERE order_id=$1
+     `,[order_id]);
+     return order_products;
+    }catch(error){
+     console.error('Error getOrderProductsByOrderId')
+     throw error;
+     }
+   }
+
 
   module.exports = {
     createOrderProduct,
-    updateOrderProduct
+    updateOrderProduct,
+    getOrderProductsByOrderId
   };

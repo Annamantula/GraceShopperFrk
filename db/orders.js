@@ -1,21 +1,20 @@
 const client = require("./client");
 
-async function createOrder({customer_id, total_cost}) {
+async function createOrder({customer_id, total_cost, delivery_date}) {
     try {
       const {
         rows: [order],
       } = await client.query(
         `
-        INSERT INTO orders(customer_id, total_cost) 
-        VALUES($1, $2)
-        ON CONFLICT (customer_id) DO NOTHING
+        INSERT INTO orders
+        VALUES($1, $2, $3)
         RETURNING  *;
       `,
-        [customer_id, total_cost]
+        [customer_id, total_cost, delivery_date]
       );
       return order;
     } catch (error) {
-      console.error("CreateUsers errors");
+      console.error("CreateOrders errors");
       throw error;
     }
   }
@@ -37,15 +36,29 @@ async function createOrder({customer_id, total_cost}) {
       );
       return rows[0];
      } catch (error) {
-        console.error("There is an error in updateContacts");
+        console.error("There is an error in updateOrders");
          throw error;
    }
   }
-  
-//checkout?
+
+
+  async function getOrderByCustomerId(customer_id) {
+    try{
+     const {rows:[order] } = await client.query(`
+     SELECT *
+     FROM orders
+     WHERE customer_id=$1
+     `,[customer_id]);
+     return order;
+    }catch(error){
+     console.error('Error getOrderByCustomerId')
+     throw error;
+     }
+   }
+
 
   module.exports = {
     createOrder,
-    updateOrder
- 
+    updateOrder,
+    getOrderByCustomerId
   };

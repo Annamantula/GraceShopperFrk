@@ -1,5 +1,5 @@
 const  client  = require('./client');
-const {createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory,createContactInfo, updateContact} = require('./index');
+const {createCart, createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory,createContactInfo, updateContact} = require('./index');
   
 
   async function dropTables() {
@@ -46,6 +46,7 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
     CREATE TABLE contacts (
       id SERIAL PRIMARY KEY,
       user_id INTEGER REFERENCES users(id),
+      email VARCHAR(255) UNIQUE NOT NULL,
       first_name VARCHAR(255) NOT NULL,
       last_name VARCHAR(255) NOT NULL,
       phone BIGINT,
@@ -141,9 +142,9 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
     
     try {
       const contactToCreate = [
-        {userId: 1, first_name: "Albert", last_name:"Gilbert",phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
-        {userId: 2, first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
-        {userId: 3, first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Miami",zip:34567},
+        {userId: 1, first_name: "Albert", last_name:"Gilbert",email: "ana@gmail.com", phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
+        {userId: 2, first_name:"Sandra",last_name:"Brown", email: "ana1@gmail.com", phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
+        {userId: 3, first_name:"Glamgal",last_name:"Scotch", email: "ana2@gmail.com", phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Miami",zip:34567},
         
         ]
 
@@ -184,6 +185,48 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
 
   }
 
+  async function createInCart() {
+    console.log("Starting to create cart");
+    
+    try {
+      const cartToCreate = [
+        {user_id:1},
+        {user_id:2}
+        ]
+      const cart = await Promise.all(cartToCreate.map(createCart))
+
+      console.log("Cart created:")
+      console.log(cart)
+      console.log("Finished creating cart!")
+    }
+    catch (error) {
+      console.error("Error creating cart!");
+      throw error;
+    }
+
+  }
+
+  async function createInCartProduct() {
+    console.log("Starting to create cart");
+    
+    try {
+      const cartToCreate = [
+        {user_id:1},
+        {user_id:2}
+        ]
+      const cart = await Promise.all(cartToCreate.map(createCart))
+
+      console.log("Cart created:")
+      console.log(cart)
+      console.log("Finished creating cart!")
+    }
+    catch (error) {
+      console.error("Error creating cart!");
+      throw error;
+    }
+
+  }
+
 
 
 
@@ -204,6 +247,7 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
       await createInitialContact();
       console.log("UpdateContactsConsole")
       await updateInitialContact();
+      await createInCart();
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error
