@@ -141,9 +141,9 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
     
     try {
       const contactToCreate = [
-        {first_name: "Albert",last_name:"Gilbert",phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
-        {first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
-        {first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Miami",zip:34567},
+        {userId: 1, first_name: "Albert", last_name:"Gilbert",phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
+        {userId: 2, first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
+        {userId: 3, first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Miami",zip:34567},
         
         ]
 
@@ -166,10 +166,10 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
     
     try {
       const contactToUpdate = [
-        {id:1, first_name: "Albert",last_name:"Gilbert",phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Chicago",zip:306783},
-        {id:3, first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Seattle",zip:40786},
-        {id:2, first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Minneapolis",zip:34567},
-        ]
+        
+        {id:2, first_name:"Sandra",last_name:"Brown",phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Seattle",zip:40786},
+        {id:3, first_name:"Glamgal",last_name:"Scotch",phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Minneapolis",zip:34567}
+      ]
 
        const updatedContacts = await Promise.all(contactToUpdate.map(updateContact))
 
@@ -194,15 +194,16 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
       await createTables()
       await createInitialUsers()
       await createInitialProducts();
-      console.log("getAllProducts", await getAllProducts());
-      console.log("getProductById", await getProductById(3));
-      console.log("getProductByName", await getProductByName("apple"));
-      console.log("getProductByCategory", await getProductByCategory("fruit"));
+      // console.log("getAllProducts", await getAllProducts());
+      // console.log("getProductById", await getProductById(3));
+      // console.log("getProductByName", await getProductByName("apple"));
+      // console.log("getProductByCategory", await getProductByCategory("fruit"));
       // const name = "banana";
       // const description = "one banana"
-      // console.log(await updateProduct({id: 3, name, description}))
-      createInitialContact();
-      updateInitialContact();
+      // console.log("UpdateProduct",await updateProduct({id: 3, name, description}))
+      await createInitialContact();
+      console.log("UpdateContactsConsole")
+      await updateInitialContact();
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error

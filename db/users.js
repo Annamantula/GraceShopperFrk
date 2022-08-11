@@ -37,7 +37,7 @@ async function createUser({ email, password, isAdmin }) {
       return ;
     }
     else {
-      throw console.log("Thers an error in GetUser");
+      throw console.error("Thers an error in GetUser");
     }
     
   }
