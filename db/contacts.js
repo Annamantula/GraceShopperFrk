@@ -12,7 +12,7 @@ async function createContactInfo({userId,first_name,last_name,phone,street,stree
       `,
         [userId,first_name,last_name,phone,street,street_num,apt,city,zip ]
       );
-      return user;
+      return      updateInitialContact(); user;
     } catch (error) {
       console.error("CreateContacts errors");
       throw error;
@@ -24,7 +24,7 @@ async function createContactInfo({userId,first_name,last_name,phone,street,stree
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(", ");
    try{ 
-  const{rows:[contact]} =
+  const{ rows } =
       await client.query(
         `
         UPDATE contacts
@@ -34,7 +34,8 @@ async function createContactInfo({userId,first_name,last_name,phone,street,stree
       `,
         Object.values(fields)
       );
-      return contact;
+      console.log("jRows",rows);
+      return rows[0];
      } catch (error) {
         console.log("There is an error in updateContacts");
          throw error;
