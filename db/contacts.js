@@ -12,7 +12,7 @@ async function createContactInfo({userId,first_name,last_name,phone,street,stree
       `,
         [userId,first_name,last_name,phone,street,street_num,apt,city,zip ]
       );
-      return      updateInitialContact(); user;
+      return user;
     } catch (error) {
       console.error("CreateContacts errors");
       throw error;
