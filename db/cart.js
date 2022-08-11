@@ -1,5 +1,4 @@
 const client = require('./client');
-const { dropTables, createTables, rebuildDB } = require('./seedData')
 
 async function createGuestCart(code) {
     try {
@@ -12,38 +11,105 @@ async function createGuestCart(code) {
         );
         return rows[0];
     } catch (error) {
-       console.error('Error creating cart')
-       throw error 
+        console.error('Error creating cart')
+        throw error
     }
 }
 
-async function createCart({...fields}) {
+async function createCart({ ...fields }) {
     const keys = Object.keys(fields)
-    .map((key) => `${key}`)
-    .join(", ");
+        .map((key) => `${key}`)
+        .join(", ");
     const binds = Object.keys(fields).map((_, index) => `$${index + 1}`).join(', ');
 
-   try{ 
-  const{ rows } =
-  //ON CONFLICT (user_id, guest_cart_id) DO NOTHING
-      await client.query(
-        `
+    try {
+        const { rows } =
+            //ON CONFLICT (user_id, guest_cart_id) DO NOTHING
+            await client.query(
+                `
         INSERT INTO cart(${keys})
         VALUES (${binds})
         RETURNING *;
       `,
-        Object.values(fields)
-      );
-      return rows[0];
-     } catch (error) {
+                Object.values(fields)
+            );
+        return rows[0];
+    } catch (error) {
         console.error("There is an error");
-         throw error;
-   }
-  }
+        throw error;
+    }
+}
 
-  //NOTE: Be sure to import to index
+async function getCartByUserId(user_id) {
+    try {
+        const {
+            rows: [cart],
+        } = await client.query(
+            `
+        SELECT *
+        FROM cart
+        WHERE user_id=$1;
+      `,
+            [user_id]
+        );
 
-  module.exports = {
+        return cart;
+    } catch (error) {
+        console.error("Failed to get cart!");
+        throw error;
+    }
+}
+
+async function getCartByGuestId(guest_cart_id) {
+    try {
+        const {
+            rows: [cart],
+        } = await client.query(
+            `
+        SELECT *
+        FROM cart
+        WHERE guest_cart_id=$1;
+      `,
+            [guest_cart_id]
+        );
+
+        return cart;
+    } catch (error) {
+        console.error("Failed to get cart!");
+        throw error;
+    }
+}
+
+async function attachCartProductsToCart(cart) {
+    const cartToReturn = cart; 
+    const cartId = cart.id;
+
+    if (!cart.id) 
+        return [];
+
+    try {
+        const { rows: cart_products } = await client.query(
+            `     
+             SELECT products.*, cart_products.count, cart_products.id 
+             AS "cartProductId", cart_products.cart_id      
+             FROM products       
+             JOIN cart_products ON cart_products.product_id = products.id      
+             WHERE cart_products.cart_id IN ($1);    
+            `, [cartId]);
+        const cartProductsToAdd = cart_products.filter((cart_product) => cart_product.cart_id === cartId);
+        cartToReturn.products = cartProductsToAdd;
+        return cartToReturn;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//NOTE: Be sure to import to index
+
+module.exports = {
     createCart,
-    createGuestCart
-  }
+    createGuestCart,
+    getCartByUserId,
+    getCartByGuestId,
+    attachCartProductsToCart
+}
