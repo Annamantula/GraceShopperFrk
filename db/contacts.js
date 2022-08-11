@@ -34,10 +34,9 @@ async function createContactInfo({userId,first_name,last_name,phone,street,stree
       `,
         Object.values(fields)
       );
-      console.log("jRows",rows);
       return rows[0];
      } catch (error) {
-        console.log("There is an error in updateContacts");
+        console.error("There is an error in updateContacts");
          throw error;
    }
   }

@@ -194,13 +194,13 @@ const {createUser, createProduct, getAllProducts, getProductById, getProductByNa
       await createTables()
       await createInitialUsers()
       await createInitialProducts();
-      console.log("getAllProducts", await getAllProducts());
-      console.log("getProductById", await getProductById(3));
-      console.log("getProductByName", await getProductByName("apple"));
-      console.log("getProductByCategory", await getProductByCategory("fruit"));
-      const name = "banana";
-      const description = "one banana"
-      console.log("UpdateProduct",await updateProduct({id: 3, name, description}))
+      // console.log("getAllProducts", await getAllProducts());
+      // console.log("getProductById", await getProductById(3));
+      // console.log("getProductByName", await getProductByName("apple"));
+      // console.log("getProductByCategory", await getProductByCategory("fruit"));
+      // const name = "banana";
+      // const description = "one banana"
+      // console.log("UpdateProduct",await updateProduct({id: 3, name, description}))
       await createInitialContact();
       console.log("UpdateContactsConsole")
       await updateInitialContact();
