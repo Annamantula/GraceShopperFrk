@@ -42,6 +42,17 @@ async function createUser({ email, password, isAdmin }) {
     
   }
 
+  async function getAllUsers() {
+    try {
+      const {rows} = await client.query(`
+       SELECT * FROM users
+      `)
+      return rows
+    } catch(error){
+      throw error
+    }
+  }
+
 async function getUserById(userId) {
     // eslint-disable-next-line no-useless-catch
     try{
@@ -82,4 +93,5 @@ async function getUserById(userId) {
     getUser,
     getUserById,
     getUserByEmail,
+    getAllUsers
   };
