@@ -52,6 +52,7 @@ router.use('/users', usersRouter);
 router.use('/users/login', usersRouter);
 router.use('/users/register', usersRouter);
 router.use('/users/:user_id', usersRouter);
+router.use('/users/me', usersRouter);
 
 //Products Router
 const productsRouter = require('./products');
