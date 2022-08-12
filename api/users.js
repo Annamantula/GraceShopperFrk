@@ -1,7 +1,7 @@
 const { JWT_SECRET } = process.env;
 const express = require('express');
 const usersRouter = express.Router();
-const {getUserByEmail, getUserById,createUser} = require("../db");
+const {getUserByEmail, getUserById,createUser, getAllUsers} = require("../db");
 
 usersRouter.post("/register", async (req, res, next) => {
     const { email, password } = req.body;
@@ -55,7 +55,7 @@ usersRouter.post("/login", async (req, res, next) => {
       } else {
         next({
           name: "IncorrectCredentialsError",
-          message: "Username or password is incorrect",
+          message: "Email or password is incorrect",
         });
       }
     } catch (error) {
@@ -63,13 +63,62 @@ usersRouter.post("/login", async (req, res, next) => {
     }
   });
    //:user_id
+usersRouter.get('/:user_id', async(req, res, next) => {
+  try {
+    const user = await getUserById(req.params.user_id);
+    res.send(user);
+  }
+  catch (error) {
+    next(error);
+  }
+
+})
 
 
    //Get All user
-   usersRouter.get("/", async (req, res) => {
-    const allUsers = await getAllUsers();
-    res.send(allUsers);
+   usersRouter.get("/", async (req, res, next) => {
+    try {
+      if (req.user) {
+        if (req.user.isAdmin === true) {
+          const allUsers = await getAllUsers();
+        res.send(allUsers);
+        }
+        else {
+          next({
+            name: "AdministratorAccessError",
+            message: "You do not have administrator access"
+          })
+        }
+      }
+      else {
+        next({
+          name: "UserAccessError",
+          message: "You must be logged in to perform this action"
+        })
+      } 
+    }
+    catch (error) {
+      next(error);
+    }
   });
+
+  // GET /api/users/me
+usersRouter.get("/me", async (req, res, next) => {
+  try {
+    if (req.user) {
+      res.send(req.user);
+    }
+    else{
+      res.status(401);
+      next({
+        name: "UnauthorizedError",
+      message: "You must be logged in to perform this action"
+      })
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 
 module.exports = usersRouter;
