@@ -120,6 +120,22 @@ async function createProduct({ name, description, price, price_type, category, i
       throw error;
     }
   }
+
+  async function deleteProduct(id) {
+    try{
+    const  { rows }  = await client.query(
+      `
+      UPDATE products
+      SET "isActive" = false
+      WHERE id=${id}
+      RETURNING *;
+    `,[id])
+    return rows[0];
+  }catch(error){
+    console.error("Delete errors")
+    throw error;
+  }
+}
   
 
   module.exports = {
@@ -129,5 +145,6 @@ async function createProduct({ name, description, price, price_type, category, i
     getProductByName,
     getProductByCategory,
     updateProduct,
+    deleteProduct,
   }
   

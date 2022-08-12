@@ -49,7 +49,8 @@ const {
       price_type TEXT NOT NULL,
       category TEXT NOT NULL,
       inventory FLOAT,
-      img_url VARCHAR(255)
+      img_url VARCHAR(255),
+      "isActive" BOOLEAN DEFAULT true
       );
     CREATE TABLE contacts (
       id SERIAL PRIMARY KEY,
