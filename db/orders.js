@@ -44,12 +44,12 @@ async function createOrder({customer_id, total_cost, delivery_date}) {
 
   async function getOrderByCustomerId(customer_id) {
     try{
-     const {rows:[order] } = await client.query(`
+     const {rows } = await client.query(`
      SELECT *
      FROM orders
      WHERE customer_id=$1
      `,[customer_id]);
-     return order;
+     return rows;
     }catch(error){
      console.error('Error getOrderByCustomerId')
      throw error;
