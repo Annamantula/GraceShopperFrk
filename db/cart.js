@@ -1,7 +1,36 @@
 const client = require('./client');
 
-async function createGuestCart(code) {
+async function getGuestCartByCode(code) {
     try {
+        const { rows } = await client.query(
+            `
+            SELECT *
+            FROM guest_cart
+            WHERE code=$1;
+          `, [code]
+        )
+        return rows[0];
+    }
+    catch (error) {
+        console.error("Error creating guest cart");
+        throw error;
+    }
+}
+
+async function createGuestCart() {
+    possibleVal = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let codeTest = {};
+    let code = "";
+    try {
+        do {
+            codeTest = {};
+            code = "";
+            for (let i = 0; i < 21; i++) {
+                randNum = Math.round(Math.random()*(possibleVal.length-1));
+                code += possibleVal[randNum]
+            }
+            codeTest = await getGuestCartByCode(code);
+        } while (codeTest);
         const { rows } = await client.query(
             `
             INSERT INTO guest_cart (code)
@@ -111,5 +140,6 @@ module.exports = {
     createGuestCart,
     getCartByUserId,
     getCartByGuestId,
-    attachCartProductsToCart
+    attachCartProductsToCart,
+    getGuestCartByCode
 }
