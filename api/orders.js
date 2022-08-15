@@ -24,6 +24,23 @@ const ordersRouter = express.Router();
 // });
 
 
+cartRouter.post("/users/:user_id", async(req,res,next) => {
+    try{
+    const order = req.params.order_id;
+    const product_id = req.params.product_id;
+    const  {count} = req.body;
+    const addProductToOrder = await createOrderProduct({order, product_id, count, purchase_price});
+    res.send(addProductToOrder);
+}
+    catch(error) {
+        next(error)
+    }
+})
+
+
+
+
+
 
 //api/orders
 ordersRouter.get("/", async (req,res,next)=>{
