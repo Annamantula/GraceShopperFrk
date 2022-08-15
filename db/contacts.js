@@ -59,10 +59,21 @@ async function createContactInfo({userId,first_name,last_name,email,phone,street
         throw error;
         }
   }
+  async function getAllContacts() {
+    try {
+      const {rows} = await client.query(`
+       SELECT * FROM contacts
+      `)
+      return rows
+    } catch(error){
+      throw error
+    }
+  }
 
 
   module.exports = {
     createContactInfo,
     updateContact,
-    getContactByEmail
+    getContactByEmail,
+    getAllContacts
   }
