@@ -218,6 +218,8 @@ const {
     try {
       const orderToCreate = [
         {customer_id:1, delivery_date:" ", total_cost:1.25},
+        {customer_id:1, delivery_date:" ", total_cost:12.95},
+        {customer_id:3, delivery_date:" ", total_cost:5.75},
         
         ]
       const order = await Promise.all(orderToCreate.map(createOrder))

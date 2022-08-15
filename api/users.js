@@ -1,4 +1,5 @@
 const { JWT_SECRET } = process.env;
+
 const express = require('express');
 const usersRouter = express.Router();
 const {getUserByEmail, getUserById,createUser, getAllUsers} = require("../db");
