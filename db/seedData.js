@@ -67,7 +67,7 @@ const {
       );
       CREATE TABLE guest_cart(
       id SERIAL PRIMARY KEY,
-      code INT
+      code VARCHAR(255) UNIQUE
       );
       CREATE TABLE cart(
         id SERIAL PRIMARY KEY,

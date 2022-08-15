@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { getUserById } = require('../db');
+const { JWT_SECRET } = process.env;
+const jwt = require('jsonwebtoken');
 
 
 
@@ -58,14 +61,17 @@ router.use('/users/me', usersRouter);
 //Products Router
 const productsRouter = require('./products');
 router.use('/products', productsRouter); //POST Admin
-router.use('/products/:product_id', productsRouter); 
-router.use('/products/:product_id/:cart_id', productsRouter);
+// router.use('/products/:product_id', productsRouter); 
+// router.use('/products/:product_id/:cart_id', productsRouter);
 
 //Cart Router
 const cartRouter = require('./cart');
-router.use('/cart/:guest_cart_id', cartRouter);
-router.use('/cart/users/:user_id', cartRouter);
-router.use('/cart/checkout', cartRouter);
+router.use('/cart', cartRouter);
+// router.use('/cart/guest/:code', cartRouter);
+// router.use('/cart/users/:user_id', cartRouter);
+// router.use('/cart/checkout', cartRouter);
+// router.use('/cart/guest', cartRouter);
+// router.use('/cart/users', cartRouter);
 
 //Orders Router
 const ordersRouter = require('./orders');

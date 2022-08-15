@@ -1,5 +1,5 @@
 const  client  = require('./client');
-const {createCart, createOrderProduct, createOrder, createCartProducts, createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory,createContactInfo, updateContact, attachCartProductsToCart, getCartByUserId, getOrderByCustomerId, attachOrderProductsToOrder} = require('./index');
+const {getGuestCartByCode, createCart, createOrderProduct, createOrder, createCartProducts, createUser, createProduct, getAllProducts, getProductById, getProductByName, updateProduct, getProductByCategory,createContactInfo, updateContact, attachCartProductsToCart, getCartByUserId, getOrderByCustomerId, attachOrderProductsToOrder, createGuestCart} = require('./index');
   
 
   async function dropTables() {
@@ -58,7 +58,7 @@ const {createCart, createOrderProduct, createOrder, createCartProducts, createUs
       );
       CREATE TABLE guest_cart(
       id SERIAL PRIMARY KEY,
-      code INT
+      code VARCHAR(255) UNIQUE
       );
       CREATE TABLE cart(
         id SERIAL PRIMARY KEY,
@@ -293,6 +293,7 @@ const {createCart, createOrderProduct, createOrder, createCartProducts, createUs
       const orderTest = await getOrderByCustomerId(1);
       console.log(orderTest);
       console.log(await attachOrderProductsToOrder(orderTest));
+      console.log(await createGuestCart());
       
     } catch (error) {
       console.log("Error during rebuildDB")
