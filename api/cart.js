@@ -67,8 +67,16 @@ cartRouter.post("/guest/:code", async(req,res,next) => {
 
 cartRouter.post("/users", async(req,res,next) => {
     try{
-
-    res.send(addProductToCart);
+      if(req.user) {
+        const cart = await createCart({user_id: req.user.id});
+        req.send(cart);
+      }
+      else {
+        next({
+          name: "UserLoginError",
+          message: "You must be logged in to do this"
+        })
+      }
 }
     catch(error) {
         next(error)
