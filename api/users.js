@@ -1,4 +1,5 @@
 const { JWT_SECRET } = process.env;
+
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const usersRouter = express.Router();

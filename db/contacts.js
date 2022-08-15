@@ -59,10 +59,42 @@ async function createContactInfo({userId,first_name,last_name,email,phone,street
         throw error;
         }
   }
+  async function getAllContacts() {
+    try {
+      const {rows} = await client.query(`
+       SELECT * FROM contacts
+      `)
+      return rows
+    } catch(error){
+      throw error
+    }
+  }
+
+  async function getContactById(id){
+    try{
+      const {
+        rows: [contact],
+      } = await client.query(
+        `
+        SELECT *
+        FROM contacts
+        WHERE id=$1;
+      `,
+        [id]
+      );
+      return contact;
+      }catch(error){
+        console.error('Error getContactById')
+        throw error;
+        }
+
+  }
 
 
   module.exports = {
     createContactInfo,
     updateContact,
-    getContactByEmail
+    getContactByEmail,
+    getAllContacts,
+    getContactById
   }
