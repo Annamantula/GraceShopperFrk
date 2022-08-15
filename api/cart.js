@@ -30,7 +30,8 @@ cartRouter.get("/users/:user_id", async(req,res,next) => {
 cartRouter.get("/guest/:code", async(req,res,next) => {
     try{
         const guestId = await getGuestCartByCode(req.params.code);
-        const cart = await getCartByGuestId(guestId);
+        const cart = await getCartByGuestId(guestId.id);
+        const cartWithProducts = await attachCartProductsToCart(cart);
         res.send(cart);
     }
     catch(error) {
@@ -39,10 +40,10 @@ cartRouter.get("/guest/:code", async(req,res,next) => {
 });
 
 //Cart products url
+//UNFINISHED already exists in products
 cartRouter.post("/users/:user_id", async(req,res,next) => {
     try{
     const cart = req.params.cart_id;
-    const product_id = req.params.product_id;
     const  {count} = req.body;
     const addProductToCart = await createCartProducts({cart, product_id, count});
     res.send(addProductToCart);
@@ -78,8 +79,8 @@ cartRouter.post("/users", async(req,res,next) => {
 cartRouter.post("/guest", async(req,res,next) => {
     try{
         const code = await createGuestCart();
-        const cart = await createCart({code});
-    res.send(cart);
+        const cart = await createCart({guest_cart_id: code.id});
+    res.send(code);
 }
     catch(error) {
         next(error)
