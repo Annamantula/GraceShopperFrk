@@ -69,7 +69,6 @@ cartRouter.post("/guest/:code", async(req,res,next) => {
 cartRouter.post("/users", async(req,res,next) => {
     try{
       if(req.user) {
-        const cart = await createCart({user_id: req.user.id});
         req.send(cart);
       }
       else {
