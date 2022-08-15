@@ -5,7 +5,7 @@ const cartRouter = express.Router();
 cartRouter.get("/users/:user_id", async(req,res,next) => {
     try{
         if(req.user) {
-            if(req.user.id === req.params.user_id || req.user.isAdmin === true) {
+            if(req.user.id == req.params.user_id || req.user.isAdmin === true) {
                 const cart = await getCartByUserId(req.params.user_id);
                 const cartWithProducts = await attachCartProductsToCart(cart);
                 res.send(cartWithProducts);
@@ -69,7 +69,8 @@ cartRouter.post("/guest/:code", async(req,res,next) => {
 cartRouter.post("/users", async(req,res,next) => {
     try{
       if(req.user) {
-        req.send(cart);
+        const cart = createCart({ user_id: req.user.id });
+        res.send(cart);
       }
       else {
         next({
