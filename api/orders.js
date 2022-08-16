@@ -34,7 +34,6 @@ const ordersRouter = express.Router();
 //     const {customer_id,delivery_date, total_cost} = req.params
 //     try{
 //         const order = await createOrder(customer_id,delivery_date, total_cost);
-//         console.log(order,"ORDER")
 //         res.send(order)
 //     }catch(error){
 //         next( error)
@@ -47,7 +46,6 @@ ordersRouter.get("/:customer_id", async(req,res,next) => {
         try{
             const id = req.params.customer_id;
             const orderId = await getOrderByCustomerId(id);
-            console.log(orderId, "ORDER IDDDDDD")
             res.send(orderId)
         }catch(error) {
             next(error)
