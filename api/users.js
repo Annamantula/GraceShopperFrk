@@ -116,7 +116,6 @@ usersRouter.get("/me", async (req, res, next) => {
 //:user_id
 usersRouter.get("/:user_id", async (req, res, next) => {
     try {
-      console.log(req.params.user_id, "req.params.user_idddddddddd");
       const user = await getUserById(req.params.user_id);
       res.send(user);
     } catch (error) {

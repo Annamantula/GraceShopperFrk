@@ -79,7 +79,7 @@ router.use('/cart', cartRouter);
 //Orders Router
 const ordersRouter = require('./orders');
 router.use('/orders', ordersRouter); //Admin
-// router.use('/orders/user/:user_id', ordersRouter);
+// router.use('/orders/users/:user_id', ordersRouter);
 // router.use('/orders/:customer_id', ordersRouter); //Admin
 
 //Customers Router
