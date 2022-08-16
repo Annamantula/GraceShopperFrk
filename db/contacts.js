@@ -53,6 +53,7 @@ async function createContactInfo({userId,first_name,last_name,email,phone,street
       `,
         [email]
       );
+      console.log(contact, "contacttttttssss")
       return contact;
       }catch(error){
         console.error('Error getCointactByEmail')

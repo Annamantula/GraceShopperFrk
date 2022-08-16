@@ -90,7 +90,7 @@ const {
     );
     CREATE TABLE orders_products(
       id SERIAL PRIMARY KEY,
-      order_id INTEGER REFERENCES cart(id),
+      order_id INTEGER REFERENCES orders(id),
       product_id INTEGER REFERENCES products(id),
       count FLOAT,
       purchase_price FLOAT
@@ -152,8 +152,8 @@ const {
     
     try {
       const contactToCreate = [
-        {userId: 1, first_name: "Albert", last_name:"Gilbert",email: "ana@gmail.com", phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
-        {userId: 2, first_name:"Sandra",last_name:"Brown", email: "ana1@gmail.com", phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
+        {userId: 1, first_name: "Albert", last_name:"Gilbert",email: "albert", phone:3425648745,street:"Bryn Mare ave",street_num:3450,apt:"3a",city:"Atlanta",zip:306783},
+        {userId: 2, first_name:"Sandra",last_name:"Brown", email: "sandra", phone:2244597823,street:"Western ave",street_num:7546,apt:201,city:"Dallas",zip:40786},
         {userId: 3, first_name:"Glamgal",last_name:"Scotch", email: "ana2@gmail.com", phone:3021207843,street:"15th ave",street_num:2301,apt:2,city:"Miami",zip:34567},
         
         ]
@@ -177,7 +177,8 @@ const {
     try {
       const cartToCreate = [
         {user_id:1},
-        {user_id:2}
+        {user_id:2},
+        {user_id:3}
         ]
       const cart = await Promise.all(cartToCreate.map(createCart))
 
