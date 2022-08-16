@@ -55,6 +55,7 @@ async function createUser({ email, password, isAdmin }) {
 
 async function getUserById(userId) {
     // eslint-disable-next-line no-useless-catch
+    console.log(userId, "userIddddd")
     try{
      const {rows:[user] } = await client.query(`
      SELECT id, email, "isAdmin"

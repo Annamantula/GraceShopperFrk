@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart } = require('../db');
+const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart, createOrder, getContactByEmail, createOrderProduct, getProductById, updateOrder, attachOrderProductsToOrder } = require('../db');
 const cartRouter = express.Router();
 
 cartRouter.get("/users/:user_id", async(req,res,next) => {
@@ -167,4 +167,51 @@ cartRouter.patch("/guest/:code", async (res,req,next) =>{
   }
 });
 
+cartRouter.post("/checkout", async (res,req,next) =>{
+  try {
+    console.log(req.user)
+    if(req.user) {
+     const cart = await getCartByUserId(req.user.id);
+     const contact = await getContactByEmail(req.user.email);
+     const cartWithProducts = await attachCartProductsToCart(cart);
+     
+     const order = await createOrder({customer_id: contact.id, total_cost: 0, delivery_date: "Sep 3, 2022"});
+     let total = 0;
+     cartWithProducts.products.Map(async (product) => {
+      productList = await getProductById(product.product_id);
+      await createOrderProduct({ order_id: order.id, product_id: product.id, count: product.count , purchase_price: productList.price });
+      total += (productList.price * product.count);
+     });
+     updatedOrder = await updateOrder({id: order.id, total_cost: total});
+     updatedOrderWithProducts = await attachOrderProductsToOrder(updateOrder);
+     return updatedOrderWithProducts;
+    }
+    else if (req.body && req.body.code & req.body.contact_id) {
+      const guestId = await getGuestCartByCode(req.body.code);
+      const contact = await getContactById(req.body.contact_id);
+      const cart = await getCartByGuestId(guestId);
+      const cartWithProducts = await attachCartProductsToCart(cart);
+     
+     const order = await createOrder({customer_id: contact.id, total_cost: 0, delivery_date: "Sep 3, 2022"});
+     let total = 0;
+     cartWithProducts.products.Map(async (product) => {
+      productList = await getProductById(product.product_id);
+      await createOrderProduct({ order_id: order.id, product_id: product.id, count: product.count , purchase_price: productList.price });
+      total += (productList.price * product.count);
+     });
+     updatedOrder = await updateOrder({id: order.id, total_cost: total});
+     updatedOrderWithProducts = await attachOrderProductsToOrder(updateOrder);
+     return updatedOrderWithProducts;
+    }
+    else{
+      next({
+        name: "InfoError",
+        message: "Insufficient info was shared",
+      })
+    }
+  
+  } catch (error) {
+    next(error);
+}
+});
 module.exports = cartRouter;
