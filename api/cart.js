@@ -2,6 +2,102 @@ const express = require('express');
 const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart, createOrder, getContactByEmail, createOrderProduct, getProductById, updateOrder, attachOrderProductsToOrder } = require('../db');
 const cartRouter = express.Router();
 
+// POST /api/cart/guest Create Guest Cart
+cartRouter.post("/guest", async(req,res,next) => {
+  try{
+      const code = await createGuestCart();
+      const cart = await createCart({guest_cart_id: code.id});
+  res.send(code);
+}
+  catch(error) {
+      next(error)
+  }
+})
+
+//Post /api/cart/users Create User Cart
+cartRouter.post("/users", async(req,res,next) => {
+  try{
+    if(req.user) {
+      const cart = createCart({ user_id: req.user.id });
+      res.send(cart);
+    }
+    else {
+      next({
+        name: "UserLoginError",
+        message: "You must be logged in to do this"
+      })
+    }
+}
+  catch(error) {
+      next(error)
+  }
+})
+
+//GET /api/cart/guest/:code Get Guest Cart
+cartRouter.get("/guest/:code", async(req,res,next) => {
+  try{
+      const guestId = await getGuestCartByCode(req.params.code);
+      const cart = await getCartByGuestId(guestId.id);
+      const cartWithProducts = await attachCartProductsToCart(cart);
+      res.send(cart);
+  }
+  catch(error) {
+      next(error)
+  }
+});
+
+//POST /api/cart/guest/:code Add Items To Guest Cart
+cartRouter.post("/guest/:code", async(req,res,next) => {
+  try{
+      const cart = req.params.cart_id;
+      const product_id = req.params.product_id;
+      const  {count} = req.body;
+      const addProductToCart = await createCartProducts({cart, product_id, count});
+      res.send(addProductToCart);
+  }
+  catch(error) {
+      next(error)
+  }
+})
+
+//PATCH /api/cart/guest/:code Edit Guest Cart Items
+cartRouter.patch("/guest/:code", async (res,req,next) =>{
+  const id = req.params.product_id;
+  const { name, description,price,price_type, category,inventory,img_url } = req.body;
+  try { 
+      if(req.user) {
+      if(req.user.isAdmin  === true) {
+      const originalProduct = await getProductById(id);
+
+      if (!originalProduct) {
+        next({
+          name: "originalProduct",
+          message: `Product ${id} not found`,
+        });
+        return;
+      }
+
+    const updatedProduct = await updateProduct({name, description,price,price_type, category,inventory,img_url,id });
+
+    if (updatedProduct) {
+      res.send(updatedProduct);
+    }} else {
+      next({
+        name: "UnauthorizedUserError",
+        message: "Product not updated",
+      });
+    }}else{
+      next({
+          name: "UnauthorizedUserError",
+          message: "Not logged in user",
+        });
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+}
+});
+
+//GET /api/cart/users/:user_id Get User Cart
 cartRouter.get("/users/:user_id", async(req,res,next) => {
     try{
         if(req.user) {
@@ -27,20 +123,10 @@ cartRouter.get("/users/:user_id", async(req,res,next) => {
     }
 });
 
-cartRouter.get("/guest/:code", async(req,res,next) => {
-    try{
-        const guestId = await getGuestCartByCode(req.params.code);
-        const cart = await getCartByGuestId(guestId.id);
-        const cartWithProducts = await attachCartProductsToCart(cart);
-        res.send(cart);
-    }
-    catch(error) {
-        next(error)
-    }
-});
 
 //Cart products url
 //UNFINISHED already exists in products
+//POST /api/cart/users/:user_id Add Items To User Cart
 cartRouter.post("/users/:user_id", async(req,res,next) => {
     try{
     const cart = req.params.cart_id;
@@ -53,48 +139,7 @@ cartRouter.post("/users/:user_id", async(req,res,next) => {
     }
 })
 
-cartRouter.post("/guest/:code", async(req,res,next) => {
-    try{
-        const cart = req.params.cart_id;
-        const product_id = req.params.product_id;
-        const  {count} = req.body;
-        const addProductToCart = await createCartProducts({cart, product_id, count});
-        res.send(addProductToCart);
-    }
-    catch(error) {
-        next(error)
-    }
-})
-
-cartRouter.post("/users", async(req,res,next) => {
-    try{
-      if(req.user) {
-        const cart = createCart({ user_id: req.user.id });
-        res.send(cart);
-      }
-      else {
-        next({
-          name: "UserLoginError",
-          message: "You must be logged in to do this"
-        })
-      }
-}
-    catch(error) {
-        next(error)
-    }
-})
-
-cartRouter.post("/guest", async(req,res,next) => {
-    try{
-        const code = await createGuestCart();
-        const cart = await createCart({guest_cart_id: code.id});
-    res.send(code);
-}
-    catch(error) {
-        next(error)
-    }
-})
-
+//PATCH /api/cart/users/:user_id Edit User Cart Items
 cartRouter.patch("/users/:user_id", async (res,req,next) =>{
     const id = req.params.product_id;
     const { name, description,price,price_type, category,inventory,img_url } = req.body;
@@ -131,45 +176,10 @@ cartRouter.patch("/users/:user_id", async (res,req,next) =>{
   }
 });
 
-cartRouter.patch("/guest/:code", async (res,req,next) =>{
-    const id = req.params.product_id;
-    const { name, description,price,price_type, category,inventory,img_url } = req.body;
-    try { 
-        if(req.user) {
-        if(req.user.isAdmin  === true) {
-        const originalProduct = await getProductById(id);
 
-        if (!originalProduct) {
-          next({
-            name: "originalProduct",
-            message: `Product ${id} not found`,
-          });
-          return;
-        }
-
-      const updatedProduct = await updateProduct({name, description,price,price_type, category,inventory,img_url,id });
-
-      if (updatedProduct) {
-        res.send(updatedProduct);
-      }} else {
-        next({
-          name: "UnauthorizedUserError",
-          message: "Product not updated",
-        });
-      }}else{
-        next({
-            name: "UnauthorizedUserError",
-            message: "Not logged in user",
-          });
-      }
-    } catch ({ name, message }) {
-      next({ name, message });
-  }
-});
-
+//POST /api/cart/checkout Checkout Cart/Create Order
 cartRouter.post("/checkout", async (res,req,next) =>{
   try {
-    console.log(req.user)
     if(req.user) {
      const cart = await getCartByUserId(req.user.id);
      const contact = await getContactByEmail(req.user.email);
