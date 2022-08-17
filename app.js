@@ -6,6 +6,8 @@ const router = require("./api");
 
 app.use(cors());
 
+app.use(express.json());
+
 app.use((req, res, next) => {
     console.log("App is up");
     next();
@@ -14,7 +16,7 @@ app.get('/', (req, res, next) => {
     res.json({msg:"Hello World"});
 })
 
-app.use(express.json());
+
 
 app.use('/api', router);
 
