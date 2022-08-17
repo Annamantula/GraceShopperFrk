@@ -32,8 +32,7 @@ productsRouter.get("/:product_id", async (req, res, next) => {
 });
 
 //POST product  
-//price_type???
-productsRouter.post("/", async (res, req, next) => {
+productsRouter.post("/", async (req, res, next) => {
   const { name, description, price, price_type, category, inventory, img_url } = req.body
   const newProduct = {};
   try {
