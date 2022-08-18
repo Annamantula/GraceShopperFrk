@@ -94,12 +94,13 @@ productsRouter.patch("/:product_id", async (req, res, next) => {
 
 //Delete
 productsRouter.delete("/:product_id", async (req, res, next) => {
+  const id = req.params.product_id;
+  console.log(req.user, id, "REQQQQ");
   try {
     if (req.user) {
       if (req.user.isAdmin === true) {
-        const id = req.params.product_id;
-        const product = await getProductById(id);
-        const deletedProduct = await deleteProduct(product.id);
+        // const product = await getProductById(id);
+        const deletedProduct = await deleteProduct(id);
         res.send(deletedProduct);
       } else {
         res.status(403);
