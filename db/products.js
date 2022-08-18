@@ -122,14 +122,15 @@ async function createProduct({ name, description, price, price_type, category, i
   }
 
   async function deleteProduct(id) {
+    const actualNum = Number.parseInt(id);
     try{
-    const  { rows }  = await client.query(
+    const { rows } = await client.query(
       `
       UPDATE products
       SET "isActive" = false
-      WHERE id=${id}
+      WHERE id=$1
       RETURNING *;
-    `,[id])
+    `,[actualNum])
     return rows[0];
   }catch(error){
     console.error("Delete errors")
