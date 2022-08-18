@@ -61,7 +61,7 @@ cartRouter.post("/guest/:code", async(req,res,next) => {
 })
 
 //PATCH /api/cart/guest/:code Edit Guest Cart Items
-cartRouter.patch("/guest/:code", async (res,req,next) =>{
+cartRouter.patch("/guest/:code", async (req,res,next) =>{
   const id = req.params.product_id;
   const { name, description,price,price_type, category,inventory,img_url } = req.body;
   try { 
@@ -140,7 +140,7 @@ cartRouter.post("/users/:user_id", async(req,res,next) => {
 })
 
 //PATCH /api/cart/users/:user_id Edit User Cart Items
-cartRouter.patch("/users/:user_id", async (res,req,next) =>{
+cartRouter.patch("/users/:user_id", async (req,res,next) =>{
     const id = req.params.product_id;
     const { name, description,price,price_type, category,inventory,img_url } = req.body;
     try { 

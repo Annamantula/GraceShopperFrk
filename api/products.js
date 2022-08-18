@@ -53,7 +53,7 @@ productsRouter.post("/", async (req, res, next) => {
 });
 
 //Update Product
-productsRouter.patch("/:product_id", async (res, req, next) => {
+productsRouter.patch("/:product_id", async (req, res, next) => {
   const id = req.params.product_id;
   const { name, description, price, price_type, category, inventory, img_url } = req.body;
   try {
@@ -93,7 +93,7 @@ productsRouter.patch("/:product_id", async (res, req, next) => {
 
 
 //Delete
-productsRouter.delete("/:product_id", async (res, req, next) => {
+productsRouter.delete("/:product_id", async (req, res, next) => {
   try {
     if (req.user) {
       if (req.user.isAdmin === true) {
