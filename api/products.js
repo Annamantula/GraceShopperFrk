@@ -120,10 +120,10 @@ productsRouter.delete("/:product_id", async (req, res, next) => {
 //POST create product in cart
 productsRouter.post("/cart/:product_id/:cart_id", async (req, res, next) => {
   try {
-    const cart = req.params.cart_id;
+    const cart_id = req.params.cart_id;
     const product_id = req.params.product_id;
     const { count } = req.body;
-    const addProductToCart = await createCartProducts({ cart, product_id, count });
+    const addProductToCart = await createCartProducts({ cart_id, product_id, count });
     res.send(addProductToCart);
   }
   catch (error) {
