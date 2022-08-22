@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart, createOrder, getContactByEmail, createOrderProduct, getProductById, updateOrder, attachOrderProductsToOrder } = require('../db');
+const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart, createOrder, getContactByEmail, createOrderProduct, getProductById, updateOrder, updateProduct, attachOrderProductsToOrder, updateCartProducts } = require('../db');
 const cartRouter = express.Router();
 
 // POST /api/cart/guest Create Guest Cart
@@ -61,37 +61,25 @@ cartRouter.post("/guest/:code", async(req,res,next) => {
 })
 
 //PATCH /api/cart/guest/:code Edit Guest Cart Items
-cartRouter.patch("/guest/:code", async (req,res,next) =>{
+cartRouter.patch("/guest/:guest_cart_id/:product_id", async (req,res,next) =>{
   const id = req.params.product_id;
-  const { name, description,price,price_type, category,inventory,img_url } = req.body;
-  try { 
-      if(req.user) {
-      if(req.user.isAdmin  === true) {
-      const originalProduct = await getProductById(id);
+  const { count } = req.body;
 
-      if (!originalProduct) {
+  try { 
+      const getCartByGuestId2 = await getCartByGuestId(req.params.guest_cart_id);
+
+      if (getCartByGuestId2) {
+        const updatedProduct = await updateCartProducts({ id, count });
+        if (updatedProduct) {
+          res.send(updatedProduct);
+        }
+      } else {
         next({
-          name: "originalProduct",
-          message: `Product ${id} not found`,
+          name: "CartAccessError",
+          message: "Not a cart",
         });
-        return;
       }
 
-    const updatedProduct = await updateProduct({name, description,price,price_type, category,inventory,img_url,id });
-
-    if (updatedProduct) {
-      res.send(updatedProduct);
-    }} else {
-      next({
-        name: "UnauthorizedUserError",
-        message: "Product not updated",
-      });
-    }}else{
-      next({
-          name: "UnauthorizedUserError",
-          message: "Not logged in user",
-        });
-    }
   } catch ({ name, message }) {
     next({ name, message });
 }
@@ -140,9 +128,9 @@ cartRouter.post("/users/:user_id", async(req,res,next) => {
 })
 
 //PATCH /api/cart/users/:user_id Edit User Cart Items
-cartRouter.patch("/users/:user_id", async (req,res,next) =>{
+cartRouter.patch("/users/:user_id/:product_id", async (req,res,next) =>{
     const id = req.params.product_id;
-    const { name, description,price,price_type, category,inventory,img_url } = req.body;
+    const { count } = req.body;
     try { 
         if(req.user) {
             if(req.user.isAdmin  === true) {
@@ -156,7 +144,7 @@ cartRouter.patch("/users/:user_id", async (req,res,next) =>{
           return;
         }
 
-      const updatedProduct = await updateProduct({name, description,price,price_type, category,inventory,img_url,id });
+      const updatedProduct = await updateProduct({ id, count });
 
       if (updatedProduct) {
         res.send(updatedProduct);
