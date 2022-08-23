@@ -98,6 +98,19 @@ cartRouter.delete("/guest/:code", async(req,res,next) => {
       next(error)
   }
 });
+//DELETE /api/cart/users/:user_id Delete User Cart Items
+cartRouter.delete("/users/:user_id", async(req,res,next) => {
+  try{
+      const cartId = await getCartByUserId(req.params.user_id);
+      console.log(cartId)
+      const deleted = await deleteCartProducts(cartId.id);
+      res.send(deleted);
+  }
+  catch(error) {
+      next(error)
+  }
+});
+
 
 //GET /api/cart/users/:user_id Get User Cart
 cartRouter.get("/users/:user_id", async(req,res,next) => {
