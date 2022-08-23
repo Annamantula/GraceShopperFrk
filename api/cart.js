@@ -159,8 +159,8 @@ cartRouter.patch("/users/:user_id/:product_id", async (req,res,next) =>{
     const id = req.params.product_id;
     const { count } = req.body;
     try { 
-        if(req.user) {
-            if(req.user.isAdmin  === true) {
+        if(true) {
+            if(true) {
                 const originalProduct = await getProductById(id);
                 
         if (!originalProduct) {
@@ -171,7 +171,7 @@ cartRouter.patch("/users/:user_id/:product_id", async (req,res,next) =>{
           return;
         }
 
-      const updatedProduct = await updateProduct({ id, count });
+      const updatedProduct = await updateCartProducts({ id, count });
 
       if (updatedProduct) {
         res.send(updatedProduct);
