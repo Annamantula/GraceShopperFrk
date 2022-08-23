@@ -127,15 +127,97 @@ const {
     console.log("Starting to create products");
     
     try {
-      const productsToCreate = [
-        {name: "apple", description: "red apple", price: 1.50, price_type: "unit", category: "fruit", inventory: 5, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" },
-        {name: "corn", description: "corn", price: 1.23, price_type: "dollar", category: "vegetable", inventory: 9, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" },
-        {name: "bread", description: "whole grain bread", price: 2.85, price_type: "$", category: "grocery", inventory: 120, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" },
-        {name: "beef steak", description: "New York Strip steak", price: 9.50, price_type: "/pound", category: "meat", inventory: 85.5, img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1" }
+      const brands = ["Transistor Foods", "Little Bytes Foods", "Cache Creameries", "URL Manufacturing", "Server Farms", "Irvine/Ortiz", "Memory Flash Farms", "Greener Capacitors", "Static Charge Foods"];
+      const foods = [
+        /*Fruits*/
+        {name: "Apples", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Blueberries", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Bananas", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Pears", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Oranges", category: "fruit", price_type:"lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Tangerines", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Grapes", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Grapefruits", category: "fruit", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        /*Vegetables*/
+        {name: "Corn", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Potatoes", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Corn", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Carrots", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Lettuce", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Cabbage", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Green Peas", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Onions", category: "vegetable", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        /*Meats*/
+        {name: "Ground Beef", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Pork Chops", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Chicken Drumsticks", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Chicken Thighs", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Boneless Skinless Chicken Breasts", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Sirloin Steak", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Pork Cutlets", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Bacon", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Ground Chuck", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Beef Ribs", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Pork Ribs", category: "meat", price_type:"/lb", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        /*Grocery*/
+        {name: "Bran Cereal", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Corn Chips", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Potato Chips", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Chocolate Chip Cookies", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Macaroni Noodles", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Spaghetti Noodles", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Chicken Noodle Soup", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        {name: "Whole Grain Bread", category: "grocery", price_type:"/unit", img_url: "https://th.bing.com/th/id/OIP.tiWHZ4k7FcRXlBanb2zfCgHaHO?pid=ImgDet&rs=1"},
+        
       ]
 
-      const products = await Promise.all(productsToCreate.map(createProduct))
+      /*Setup For Product Creation*/
+      let productsToCreate = [];
+      let pBrands = 6;
+      let pFoods = 16;
+      let jump = 1;
 
+      /*Product Creation*/
+      for (let i = 0; i < (foods.length * brands.length); i++) {
+
+        /*Set Jump and Set Pointers Within Range*/
+        if (jump < 0) {
+          jump = (-jump) + 1;
+        }
+        else {
+          jump = -(jump + 1);
+        }
+        while (pBrands >= brands.length) {
+          pBrands = pBrands - brands.length;
+        }
+        while (pBrands < 0) {
+          pBrands = pBrands + brands.length;
+        }
+        while (pFoods >= foods.length){
+          pFoods = pFoods - foods.length;
+        }
+        while (pFoods < 0) {
+          pFoods = pFoods + brands.length;
+        }
+
+        /*Assignment*/
+        let name = (brands[pBrands] + " " + foods[pFoods].name );
+        let description = `You will be sure to enjoy the ${foods[pFoods].name} from ${brands[pBrands]}.`;
+        let price =Number.parseFloat(10 * Math.random()).toFixed(2);
+        let price_type = foods[pFoods].price_type;
+        let category = foods[pFoods].category;
+        let inventory = Math.round(10 * Math.random());
+        let img_url = foods[pFoods].img_url;
+        
+        productsToCreate[i] = {name: name, description: description, price: price, price_type: price_type, category: category, inventory: inventory, img_url: img_url}
+
+        /*Move Pointers*/
+        pFoods = pFoods + jump;
+        pBrands = pBrands + jump;
+      }
+      
+      /*Place Products in Database*/
+      const products = await Promise.all(productsToCreate.map(createProduct))
       console.log("Products created:")
       console.log(products)
       console.log("Finished creating products!")
