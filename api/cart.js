@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart, createOrder, getContactByEmail, createOrderProduct, getProductById, updateOrder, updateProduct, attachOrderProductsToOrder, updateCartProducts } = require('../db');
+const { getCartByUserId, createCartProducts, getCartByGuestId, getGuestCartByCode, attachCartProductsToCart, createGuestCart, createCart, createOrder, getContactByEmail, createOrderProduct, getProductById, updateOrder, updateProduct, attachOrderProductsToOrder, updateCartProducts, deleteCartProducts } = require('../db');
 const cartRouter = express.Router();
 
 // POST /api/cart/guest Create Guest Cart
@@ -83,6 +83,20 @@ cartRouter.patch("/guest/:guest_cart_id/:product_id", async (req,res,next) =>{
   } catch ({ name, message }) {
     next({ name, message });
 }
+});
+
+//DELETE /api/cart/guest/:code Delete Guest Cart Items
+cartRouter.delete("/guest/:code", async(req,res,next) => {
+  try{
+      const guestId = await getGuestCartByCode(req.params.code);
+      const cartId = await getCartByGuestId(guestId.id);
+      console.log(guestId, cartId)
+      const deleted = await deleteCartProducts(cartId.id);
+      res.send(deleted);
+  }
+  catch(error) {
+      next(error)
+  }
 });
 
 //GET /api/cart/users/:user_id Get User Cart

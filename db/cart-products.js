@@ -17,7 +17,7 @@ async function createCartProducts({cart_id, product_id, count}) {
    }
 }
 
-async function deleteCartProducts(cart_products_id) {
+async function deleteCartProduct(cart_products_id) {
     try {
        const { rows } = await client.query(
         `
@@ -32,6 +32,23 @@ async function deleteCartProducts(cart_products_id) {
     console.error("error")
     throw error
    }
+}
+async function deleteCartProducts(cart_id) {
+   try {
+      const { rows } = await client.query(
+       `
+       DELETE FROM cart_products
+       WHERE cart_id=$1
+       RETURNING *;
+       `, [cart_id]
+      )
+      console.log(rows);
+   return rows;
+
+  } catch (error) {
+   console.error("error")
+   throw error
+  }
 }
 
 async function updateCartProducts({id,...fields}) {
