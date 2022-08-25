@@ -79,19 +79,6 @@ async function createOrder({customer_id, total_cost, delivery_date}) {
         console.error(error);
     }
 }
-// const getAllOrders = async () => {
-//     try {
-//       const { rows } = await client.query(
-//         `SELECT id, customer_id, delivery_date, total_cost
-//         FROM orders;`
-//       );
-//       const orderWithDetails = addDetailsToOrders(rows);
-//       return orderWithDetails;
-//     } catch (error) {
-//       console.log(error);
-//       throw error;
-//     }
-//   };
 
 
   module.exports = {

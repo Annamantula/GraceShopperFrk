@@ -13,7 +13,7 @@ app.use((req, res, next) => {
     next();
 });
 app.get('/', (req, res, next) => {
-    res.json({msg:"Hello World"});
+    res.json({msg:"API Working"});
 })
 
 

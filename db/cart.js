@@ -133,7 +133,6 @@ async function attachCartProductsToCart(cart) {
     }
 }
 
-//NOTE: Be sure to import to index
 
 module.exports = {
     createCart,

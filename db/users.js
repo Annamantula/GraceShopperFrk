@@ -1,10 +1,8 @@
 const client = require("./client");
 
-// const bcrypt = require("bcrypt");
 
 async function createUser({ email, password, isAdmin }) {
-    // const SALT_COUNT = 10;
-    // const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+ 
     try {
       const {
         rows: [user],
@@ -27,8 +25,7 @@ async function createUser({ email, password, isAdmin }) {
   async function getUser({ email, password }) {
     const user = await getUserByEmail(email);
     const dbpassword = user.password
-    // const hashedPassword = user.password;
-    // const passwordsMatch = await bcrypt.compare(password, hashedPassword);
+
     if (dbpassword === password) {
     delete user.password;
     return user;
@@ -54,8 +51,7 @@ async function createUser({ email, password, isAdmin }) {
   }
 
 async function getUserById(userId) {
-    // eslint-disable-next-line no-useless-catch
-    console.log(userId, "userIddddd")
+
     try{
      const {rows:[user] } = await client.query(`
      SELECT id, email, "isAdmin"
@@ -70,7 +66,7 @@ async function getUserById(userId) {
    }
 
    async function getUserByEmail(email) {
-    // eslint-disable-next-line no-useless-catch
+  
     try{
       const {
         rows: [user],
