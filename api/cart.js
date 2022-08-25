@@ -157,38 +157,18 @@ cartRouter.post("/users/:user_id", async(req,res,next) => {
 //PATCH /api/cart/users/:user_id Edit User Cart Items
 cartRouter.patch("/users/:user_id/:product_id", async (req,res,next) =>{
     const id = req.params.product_id;
-    const { count } = req.body;
-    try { 
-        if(true) {
-            if(true) {
-                const originalProduct = await getProductById(id);
-                
-        if (!originalProduct) {
-          next({
-            name: "originalProduct",
-            message: `Product ${id} not found`,
-          });
-          return;
-        }
+    const { count, cart_product_id } = req.body;
 
-      const updatedProduct = await updateCartProducts({ id, count });
+    try{
+      const updatedProduct = await updateCartProducts({ id:cart_product_id, count });
 
       if (updatedProduct) {
         res.send(updatedProduct);
-      }} else {
-        next({
-          name: "UnauthorizedUserError",
-          message: "Product not updated",
-        });
-      }}else{
-        next({
-            name: "UnauthorizedUserError",
-            message: "Not logged in user",
-          });
-      }
-    } catch ({ name, message }) {
+    }}
+    catch ({ name, message }) {
       next({ name, message });
   }
+    
 });
 
 // //POST /api/cart/checkout Checkout Cart/Create Order
