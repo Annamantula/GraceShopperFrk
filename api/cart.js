@@ -90,7 +90,6 @@ cartRouter.delete("/guest/:code", async(req,res,next) => {
   try{
       const guestId = await getGuestCartByCode(req.params.code);
       const cartId = await getCartByGuestId(guestId.id);
-      console.log(guestId, cartId)
       const deleted = await deleteCartProducts(cartId.id);
       res.send(deleted);
   }
@@ -102,7 +101,6 @@ cartRouter.delete("/guest/:code", async(req,res,next) => {
 cartRouter.delete("/users/:user_id", async(req,res,next) => {
   try{
       const cartId = await getCartByUserId(req.params.user_id);
-      console.log(cartId)
       const deleted = await deleteCartProducts(cartId.id);
       res.send(deleted);
   }
@@ -140,7 +138,6 @@ cartRouter.get("/users/:user_id", async(req,res,next) => {
 
 
 //Cart products url
-//UNFINISHED already exists in products
 //POST /api/cart/users/:user_id Add Items To User Cart
 cartRouter.post("/users/:user_id", async(req,res,next) => {
     try{
@@ -174,32 +171,19 @@ cartRouter.patch("/users/:user_id/:product_id", async (req,res,next) =>{
 // //POST /api/cart/checkout Checkout Cart/Create Order
 cartRouter.post("/checkout", async (req,res,next) =>{
   try {
-    console.log (req.user, "req.userrrrrrr")
     if(req.user) {
-      console.log(req.user.id, "req.user.idddddddd")
      const cart = await getCartByUserId(req.user.id);
      const contact = await getContactByEmail(req.user.email);
-     console.log (contact, "contactttt")
-     console.log (cart, "caaaaaart")
      const cartWithProducts = await attachCartProductsToCart(cart);
     
      const order = await createOrder({customer_id: contact.id, total_cost: 0, delivery_date: "Sep 3, 2022"});
-     console.log(order.id, "order.idorder.idorder.id")
-     console.log(order, "order from cart.jssss")
      let total = 0;
      await cartWithProducts.products.map(async (product) => {
-       console.log (product, "prrrrdct")
-      // productList = await getProductById(product.id);
-      // console.log(productList, "productLiiiist")
       const createdProduct=  await createOrderProduct({ order_id: order.id, product_id: product.id, count: product.count , purchase_price: product.price });
-     console.log(createdProduct , "createdProductttttt")
       total += (product.price * product.count);
      });
-     console.log ( "1111111")
      const updatedOrder = await updateOrder({id: order.id, total_cost: total});
-     console.log ( "222222")
      const updatedOrderWithProducts = await attachOrderProductsToOrder(updatedOrder);
-     console.log ( "333333")
      res.send (updatedOrderWithProducts);
     }
     else if (req.body && req.body.code & req.body.contact_id) {
@@ -209,13 +193,8 @@ cartRouter.post("/checkout", async (req,res,next) =>{
       const cartWithProducts = await attachCartProductsToCart(cart);
     
      const order = await createOrder({customer_id: contact.id, total_cost: 0, delivery_date: "Sep 3, 2022"});
-     console.log(order.id, "order.idorder.idorder.id")
-     console.log(order, "order from cart.jssss")
      let total = 0;
      cartWithProducts.products.map(async (product) => {
-       console.log (product, "prrrrdct")
-      // productList = await getProductById(product.id);
-      // console.log(productList, "productLiiiist")
       await createOrderProduct({ order_id: order.id, product_id: product.id, count: product.count , purchase_price: product.price });
       total += (product.price * product.count);
      });
@@ -240,45 +219,3 @@ cartRouter.post("/checkout", async (req,res,next) =>{
 
 
 module.exports = cartRouter;
-
-
-
-
-
-
-
-
-// cartRouter.post("/checkout", async (req,res,next) =>{
-//   try {
-//     console.log (req.user, "req.userrrrrrr")
-//     if(req.user) {
-//       console.log(req.user.id, "req.user.idddddddd")
-//      const cart = await getCartByUserId(req.user.id);
-//      const contact = await getContactByEmail(req.user.email);
-//      console.log (contact, "contactttt")
-//      console.log (cart, "caaaaaart")
-//      const cartWithProducts = await attachCartProductsToCart(cart);
-    
-//      const order = await createOrder({customer_id: contact.id, total_cost: 0, delivery_date: "Sep 3, 2022"});
-//      return order;
-//     }
-//     else if (req.body && req.body.code & req.body.contact_id) {
-//       const guestId = await getGuestCartByCode(req.body.code);
-//       const contact = await getContactById(req.body.contact_id);
-//       const cart = await getCartByGuestId(guestId);
-//       const cartWithProducts = await attachCartProductsToCart(cart);
-    
-//       const order = await createOrder({customer_id: contact.id, total_cost: 0, delivery_date: "Sep 3, 2022"});
-//       return order;
-//     }
-//     else{
-//       next({
-//         name: "InfoError",
-//         message: "Insufficient info was shared",
-//       })
-//     }
-  
-//   } catch (error) {
-//     next(error);
-// }
-// });

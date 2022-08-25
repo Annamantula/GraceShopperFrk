@@ -42,7 +42,6 @@ async function deleteCartProducts(cart_id) {
        RETURNING *;
        `, [cart_id]
       )
-      console.log(rows);
    return rows;
 
   } catch (error) {

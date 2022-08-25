@@ -20,7 +20,6 @@ router.use(async (req, res, next) => {
      
         if (id) {
           req.user = await getUserById(id);   
-          console.log(req.user, "req.user from index.jsssss")   
           next();
         }
       } catch ({ error, name, message }) {
