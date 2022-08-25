@@ -7,7 +7,8 @@ const {
   updateProduct,
   getProductById,
   deleteProduct,
-  getAllProducts
+  getAllProducts,
+  activateProduct
 } = require('../db/products');
 
 //get all products
@@ -107,6 +108,29 @@ productsRouter.delete("/:product_id", async (req, res, next) => {
         next({
           name: "Error",
           message: `User ${req.user.email}is not allowed to delete ${product.name}`,
+        });
+      }
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+//Post
+productsRouter.post("/:product_id", async (req, res, next) => {
+  const id = req.params.product_id;
+  console.log(req.user, id, "REQQQQ");
+  try {
+    if (req.user) {
+      if (req.user.isAdmin === true) {
+        // const product = await getProductById(id);
+        const deletedProduct = await activateProduct(id);
+        res.send(deletedProduct);
+      } else {
+        res.status(403);
+        next({
+          name: "Error",
+          message: `User ${req.user.email}is not allowed to activate ${product.name}`,
         });
       }
     }
